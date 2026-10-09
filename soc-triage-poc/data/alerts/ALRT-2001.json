@@ -1,0 +1,31 @@
+{
+  "alert_id": "ALRT-2001",
+  "timestamp": "2026-09-28T02:14:30Z",
+  "source": "VPN Gateway / UEBA (simulated)",
+  "alert_type": "Anomalous Remote Login and Data Access",
+  "severity": "Medium",
+  "source_ip": "198.51.100.77",
+  "destination_ip": "10.40.2.21",
+  "user": "priya.nair",
+  "asset": "fs-hr-02",
+  "event_description": "Successful VPN login from a location outside the user's 90-day baseline, followed by a 1.8 GB read from an HR file share.",
+  "log_evidence": [
+    {
+      "evidence_id": "LOG-2001-01",
+      "time": "2026-09-28T02:14:30Z",
+      "text": "VPN: successful login for priya.nair from 198.51.100.77; geolocation outside 90-day baseline; MFA push approved."
+    },
+    {
+      "evidence_id": "LOG-2001-02",
+      "time": "2026-09-28T02:25:10Z",
+      "text": "File server: 1.8 GB read from \\\\fs-hr-02\\HR_Records by priya.nair over 12 minutes."
+    },
+    {
+      "evidence_id": "LOG-2001-03",
+      "time": "2026-09-28T02:30:00Z",
+      "text": "HR leave system (simulated): priya.nair on approved leave 2026-09-26 to 2026-10-02; travel destination not recorded."
+    }
+  ],
+  "threat_intelligence": "Mixed reputation reported by source tool",
+  "asset_criticality": null
+}

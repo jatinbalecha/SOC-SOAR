@@ -1,0 +1,31 @@
+{
+  "_help": "Edit this file, then run: python tools/build_website.py  (benchmark results are read automatically from benchmark/results/summary_by_model.csv)",
+  "team_name": "",
+  "institution": "Symbiosis Centre for Information Technology, Pune",
+  "team_members": [
+    "Arijit Paul",
+    "Aviral Bajpei",
+    "Garvit Saraswat",
+    "Jatin Balecha",
+    "Prakhar Aryan"
+  ],
+  "app_url": "",
+  "video_url": "https://drive.google.com/drive/folders/1RpVaA3kFUzE1MyHtbhU2kA-EvTd-V9jx?usp=sharing",
+  "expert": {
+    "name": "",
+    "designation": "",
+    "organisation": "",
+    "summary": [],
+    "changes_made": []
+  },
+  "team_prns": {
+    "Arijit Paul": "25030241061",
+    "Aviral Bajpei": "25030241063",
+    "Garvit Saraswat": "25030241070",
+    "Jatin Balecha": "25030241073",
+    "Prakhar Aryan": "25030241085"
+  },
+  "show_prns_on_website": false,
+  "submitted_to": "Dr. Anshul Saxena",
+  "evidence_url": "https://drive.google.com/drive/folders/1RpVaA3kFUzE1MyHtbhU2kA-EvTd-V9jx?usp=sharing"
+}

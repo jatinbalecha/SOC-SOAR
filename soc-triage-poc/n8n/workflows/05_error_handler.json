@@ -1,0 +1,328 @@
+{
+  "id": "socWf4ErrorHdl01",
+  "name": "SOC WF-4 Error Handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "16da5d6f-a489-40e4-a3fb-aaf1845d4415"
+    },
+    {
+      "parameters": {
+        "jsCode": "const e = $input.first().json;\nreturn [{ json: { execution_id: String((e.execution && e.execution.id) || ''), workflow: (e.workflow && e.workflow.name) || '', node: (e.execution && e.execution.lastNodeExecuted) || '',\n  message: String((e.execution && e.execution.error && e.execution.error.message) || (e.trigger && e.trigger.error && e.trigger.error.message) || 'unknown error').slice(0, 800) } }];"
+      },
+      "name": "Build Exception Record",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ],
+      "id": "7e09e984-bd5f-4a86-8739-7f1d9e614093"
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "soc_cases"
+        },
+        "returnAll": false,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "execution_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.execution_id }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "name": "Find Case by Execution",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        0
+      ],
+      "id": "2e807ff7-aa6d-45ff-88ae-ffa404edb6f9",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const err = $('Build Exception Record').first().json; const row = $input.first().json;\nconst now = new Date().toISOString();\nif (!row || !row.case_id) return [{ json: { case_id: 'CASE-UNLINKED-' + err.execution_id, created_at: now, updated_at: now, alert_id: 'UNKNOWN', status: 'EXCEPTION_MANUAL_QUEUE', route: 'EXCEPTION', priority: 'P1', execution_id: err.execution_id, exception_stage: 'workflow_error', exception_reason: err.workflow + ' / ' + err.node + ': ' + err.message } }];\nreturn [{ json: { case_id: row.case_id, updated_at: now, status: 'EXCEPTION_MANUAL_QUEUE', route: 'EXCEPTION', priority: 'P1', exception_stage: 'workflow_error', exception_reason: err.workflow + ' / ' + err.node + ': ' + err.message } }];"
+      },
+      "name": "Mark Case Exception",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ],
+      "id": "199ed5a9-6780-4abd-b761-4aba204ffd27"
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "soc_cases"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "case_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.case_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "name": "Update Case",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        0
+      ],
+      "id": "875e60b1-b5b0-47a3-a7fa-b51571d62b07"
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "insert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "soc_audit"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ts": "={{ $now.toUTC().toISO() }}",
+            "execution_id": "={{ $execution.id }}",
+            "latency_ms": "={{ 0 }}",
+            "model": "",
+            "prompt_version": "",
+            "status": "E",
+            "case_id": "={{ $('Mark Case Exception').first().json.case_id }}",
+            "step": "error_handler",
+            "actor": "n8n error workflow",
+            "event": "WORKFLOW_ERROR",
+            "detail": "={{ $('Mark Case Exception').first().json.exception_reason }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ts",
+              "displayName": "ts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "case_id",
+              "displayName": "case_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "step",
+              "displayName": "step",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "actor",
+              "displayName": "actor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "model",
+              "displayName": "model",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "prompt_version",
+              "displayName": "prompt_version",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "event",
+              "displayName": "event",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "detail",
+              "displayName": "detail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "latency_ms",
+              "displayName": "latency_ms",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "name": "Audit: WORKFLOW_ERROR",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1200,
+        0
+      ],
+      "id": "4c0753c3-214e-4cb2-bee3-8917233493c0"
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Build Exception Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Exception Record": {
+      "main": [
+        [
+          {
+            "node": "Find Case by Execution",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Find Case by Execution": {
+      "main": [
+        [
+          {
+            "node": "Mark Case Exception",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Case Exception": {
+      "main": [
+        [
+          {
+            "node": "Update Case",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Case": {
+      "main": [
+        [
+          {
+            "node": "Audit: WORKFLOW_ERROR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

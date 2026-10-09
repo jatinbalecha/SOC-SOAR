@@ -1,0 +1,59 @@
+[
+  {
+    "evidence_id": "HIST-2001",
+    "time": "2026-09-27T21:40:05Z",
+    "source": "VPN",
+    "users": [
+      "priya.nair"
+    ],
+    "hosts": [],
+    "ips": [
+      "198.51.100.77"
+    ],
+    "description": "5 failed VPN logins for priya.nair from 198.51.100.77",
+    "severity": "Low"
+  },
+  {
+    "evidence_id": "HIST-3001",
+    "time": "2026-09-27T13:05:12Z",
+    "source": "Email gateway",
+    "users": [
+      "adm.rkulkarni"
+    ],
+    "hosts": [
+      "wks-dba-07"
+    ],
+    "ips": [],
+    "description": "adm.rkulkarni clicked a link in a suspected phishing email on wks-dba-07",
+    "severity": "Medium"
+  },
+  {
+    "evidence_id": "HIST-3002",
+    "time": "2026-09-27T13:22:40Z",
+    "source": "EDR",
+    "users": [
+      "adm.rkulkarni"
+    ],
+    "hosts": [
+      "wks-dba-07"
+    ],
+    "ips": [],
+    "description": "Unsigned process accessed LSASS memory on wks-dba-07 under adm.rkulkarni",
+    "severity": "High"
+  },
+  {
+    "evidence_id": "HIST-3003",
+    "time": "2026-09-27T13:58:03Z",
+    "source": "SIEM",
+    "users": [
+      "adm.rkulkarni"
+    ],
+    "hosts": [
+      "wks-dba-07",
+      "fin-db-01"
+    ],
+    "ips": [],
+    "description": "Admin-share (SMB) access from wks-dba-07 to fin-db-01 by adm.rkulkarni",
+    "severity": "Medium"
+  }
+]

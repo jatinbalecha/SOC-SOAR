@@ -1,0 +1,14 @@
+SOC Agentic Triage PoC - how to run (Windows, no Docker, no Ollama)
+
+Install once: Node.js 24 LTS (nodejs.org) and Python 3.10+ (python.org, tick "Add python.exe to PATH").
+Get a free Groq API key: console.groq.com -> API Keys -> Create API Key.
+
+Then double-click, in this order:
+  1_SETUP.bat        once (5-15 min first time)
+  CHECK_MODELS.bat   once, checks the models are still offered
+  2_START.bat        every session; paste the key when asked; console opens at http://localhost:8501
+  SELF_TEST.bat      optional, checks everything with mock models
+  RUN_BENCHMARK.bat  once, the Stage 3 model comparison (1-3 hours)
+  3_SHARE_ONLINE.bat optional: public, password-protected link to the console (docs\HOSTING.md)
+
+Full details and troubleshooting: README.md

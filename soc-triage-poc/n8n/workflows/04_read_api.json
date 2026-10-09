@@ -1,0 +1,310 @@
+{
+  "id": "socWf3ReadApi001",
+  "name": "SOC WF-3 Read API",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "soc-read",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Read Intake",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "6ce4096b-3b23-4131-a714-5fc0a5a075aa",
+      "webhookId": "9028b228-0c2b-483f-b70f-323f9e2acc34"
+    },
+    {
+      "parameters": {
+        "mode": "expression",
+        "numberOutputs": 4,
+        "output": "={{ ({ cases: 0, case: 1, audit: 2 })[$json.query.resource] ?? 3 }}"
+      },
+      "name": "Which Resource?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        240,
+        0
+      ],
+      "id": "e3c6ad10-d5a8-4c4d-9e09-8a2705819b0f"
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "soc_cases"
+        },
+        "returnAll": true
+      },
+      "name": "Get All Cases",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        -240
+      ],
+      "id": "499cf01a-b63c-4c46-ae5a-c438b55096e8",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const keep = ['case_id', 'created_at', 'updated_at', 'alert_id', 'status', 'route', 'priority', 'risk_score', 'classification', 'confidence', 'flags', 'model', 'exception_stage', 'total_latency_ms', 'retries', 'hallucinated_ids'];\nconst rows = $input.all().map((i) => i.json).filter((r) => r.case_id);\nreturn [{ json: { cases: rows.map((r) => Object.fromEntries(keep.map((k) => [k, r[k] ?? null]))) } }];"
+      },
+      "name": "Shape Cases",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -240
+      ],
+      "id": "2e5c33f8-0fdc-4914-93aa-415415e529f0"
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "soc_cases"
+        },
+        "returnAll": false,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "case_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.query.id }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "name": "Get One Case",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        -80
+      ],
+      "id": "2c13636f-7145-4d7b-a4b3-9e39378a3151",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const r = $input.first().json; return [{ json: { case: r && r.case_id ? r : null } }];"
+      },
+      "name": "Shape Case",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -80
+      ],
+      "id": "144146ba-244f-4643-8f8e-187d87dba369"
+    },
+    {
+      "parameters": {
+        "resource": "row",
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "soc_audit"
+        },
+        "returnAll": true
+      },
+      "name": "Get Audit Rows",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        80
+      ],
+      "id": "b81fb844-72cd-449c-802d-d889f4d0a726",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const id = $('Read Intake').first().json.query.id;\nconst rows = $input.all().map((i) => i.json).filter((r) => r.ts && (!id || r.case_id === id)).sort((a, b) => String(a.ts).localeCompare(String(b.ts)));\nreturn [{ json: { audit: rows.map(({ id, createdAt, updatedAt, ...rest }) => rest) } }];"
+      },
+      "name": "Shape Audit",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        80
+      ],
+      "id": "30f37f05-aa01-497c-9221-028fec48ff18"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: { ok: true, service: 'soc-read', resources: ['cases', 'case', 'audit'] } }];"
+      },
+      "name": "Ping",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        240
+      ],
+      "id": "b49957fe-9fb6-499d-b24b-30a5f2331dd2"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        960,
+        0
+      ],
+      "id": "96d72fcf-8b6a-4699-b32b-0a886453ec82"
+    }
+  ],
+  "connections": {
+    "Read Intake": {
+      "main": [
+        [
+          {
+            "node": "Which Resource?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Which Resource?": {
+      "main": [
+        [
+          {
+            "node": "Get All Cases",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get One Case",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Audit Rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ping",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Cases": {
+      "main": [
+        [
+          {
+            "node": "Shape Cases",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get One Case": {
+      "main": [
+        [
+          {
+            "node": "Shape Case",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Audit Rows": {
+      "main": [
+        [
+          {
+            "node": "Shape Audit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shape Cases": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shape Case": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shape Audit": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ping": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "errorWorkflow": "socWf4ErrorHdl01"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

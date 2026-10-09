@@ -1,0 +1,5 @@
+{
+  "M1": "qwen/qwen3.8-27b",
+  "M2": "openai/gpt-oss-20b",
+  "M3": "openai/gpt-oss-120b"
+}

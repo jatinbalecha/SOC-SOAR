@@ -1,0 +1,538 @@
+{
+ "ALRT-1001": {
+  "corr": {
+   "agent": "alert_correlation",
+   "case_id": "{{case_id}}",
+   "confidence": 0.9,
+   "escalation_condition_met": false,
+   "escalation_reason": null,
+   "entities": {
+    "ips": [
+     "10.20.5.15"
+    ],
+    "hosts": [
+     "vscan-01"
+    ],
+    "users": [
+     "svc_vulnscan"
+    ],
+    "hashes": [],
+    "domains": []
+   },
+   "related_alert_ids": [],
+   "timeline": [
+    {
+     "time": "2026-09-27T02:04:00Z",
+     "event": "SYN sweep of 10.20.8.0/24 from vscan-01",
+     "evidence_id": "LOG-1001-01"
+    },
+    {
+     "time": "2026-09-27T02:10:14Z",
+     "event": "Change CHG-2207 authorises weekly scan",
+     "evidence_id": "LOG-1001-02"
+    }
+   ],
+   "attack_stage_hypothesis": "NONE",
+   "correlation_summary": "Port sweep from vscan-01 matches authorised weekly scan CHG-2207 (LOG-1001-02). No related alerts in 24 h.",
+   "evidence_gaps": [
+    "Scanner job log confirming run completion"
+   ]
+  },
+  "ti": {
+   "agent": "threat_intel",
+   "case_id": "{{case_id}}",
+   "confidence": 0.92,
+   "escalation_condition_met": false,
+   "escalation_reason": null,
+   "indicator_assessments": [
+    {
+     "indicator": "10.20.5.15",
+     "type": "ip",
+     "verdict": "CLEAN",
+     "record_ids": [
+      "TI-006"
+     ],
+     "rationale": "Internal allow-list record: authorised scanner."
+    }
+   ],
+   "overall_ti_level": "CLEAN",
+   "conflicts": [],
+   "not_found": []
+  },
+  "asset": {
+   "agent": "asset_context",
+   "case_id": "{{case_id}}",
+   "confidence": 0.9,
+   "escalation_condition_met": false,
+   "escalation_reason": null,
+   "asset_assessments": [
+    {
+     "asset": "vscan-01",
+     "record_id": "CMDB-001",
+     "criticality": "LOW",
+     "data_sensitivity": "LOW",
+     "owner": "IT Security Engineering",
+     "business_impact_note": "Authorised vulnerability scanner; low business impact."
+    }
+   ],
+   "user_assessments": [
+    {
+     "user": "svc_vulnscan",
+     "record_id": "ID-001",
+     "privilege": "SERVICE_ACCOUNT",
+     "note": "Vulnerability scanning service account."
+    }
+   ],
+   "unknown_entities": [],
+   "overall_asset_criticality": "LOW"
+  },
+  "risk": {
+   "agent": "risk_prioritisation",
+   "case_id": "{{case_id}}",
+   "confidence": 0.9,
+   "escalation_condition_met": false,
+   "escalation_reason": null,
+   "behaviour_level": "BENIGN_EXPLAINED",
+   "proposed_classification": "LOW",
+   "incident_category": "BENIGN_TRUE_POSITIVE",
+   "recommended_action": "CLOSE_AS_BENIGN",
+   "escalate_recommended": false,
+   "reasons": [
+    {
+     "statement": "Scan activity falls inside authorised change window CHG-2207.",
+     "evidence_ids": [
+      "LOG-1001-02"
+     ]
+    },
+    {
+     "statement": "Source is an internal allow-listed scanner on a low-criticality asset.",
+     "evidence_ids": [
+      "TI-006",
+      "CMDB-001"
+     ]
+    }
+   ],
+   "missing_evidence": []
+  },
+  "sum": {
+   "agent": "incident_summary",
+   "case_id": "{{case_id}}",
+   "confidence": 0.9,
+   "escalation_condition_met": false,
+   "escalation_reason": null,
+   "headline": "Authorised weekly vulnerability scan from vscan-01 triggered IDS port-scan alert",
+   "what_happened": "vscan-01 (10.20.5.15) swept 10.20.8.0/24 on four ports during the approved scan window CHG-2207.",
+   "key_evidence": [
+    {
+     "text": "Change calendar authorises the scan window",
+     "evidence_ids": [
+      "LOG-1001-02"
+     ]
+    },
+    {
+     "text": "Source IP on internal allow-list",
+     "evidence_ids": [
+      "TI-006"
+     ]
+    }
+   ],
+   "risk_rationale": "Score 12 (LOW): benign, explained activity from a low-criticality service asset.",
+   "uncertainties": [],
+   "recommended_options": [
+    {
+     "action": "CLOSE_AS_BENIGN",
+     "why": "Activity matches authorised change CHG-2207",
+     "requires_approval": true
+    }
+   ],
+   "decision_needed_from_analyst": "Confirm closure as benign authorised scan."
+  }
+ },
+ "ALRT-2001": {
+  "corr": {
+   "agent": "alert_correlation",
+   "case_id": "{{case_id}}",
+   "confidence": 0.7,
+   "escalation_condition_met": false,
+   "escalation_reason": null,
+   "entities": {
+    "ips": [
+     "198.51.100.77",
+     "10.40.2.21"
+    ],
+    "hosts": [
+     "fs-hr-02"
+    ],
+    "users": [
+     "priya.nair"
+    ],
+    "hashes": [],
+    "domains": []
+   },
+   "related_alert_ids": [
+    "HIST-2001"
+   ],
+   "timeline": [
+    {
+     "time": "2026-09-27T21:40:05Z",
+     "event": "5 failed VPN logins from 198.51.100.77",
+     "evidence_id": "HIST-2001"
+    },
+    {
+     "time": "2026-09-28T02:14:30Z",
+     "event": "Successful VPN login outside baseline, MFA approved",
+     "evidence_id": "LOG-2001-01"
+    },
+    {
+     "time": "2026-09-28T02:25:10Z",
+     "event": "1.8 GB read from HR share",
+     "evidence_id": "LOG-2001-02"
+    }
+   ],
+   "attack_stage_hypothesis": "INITIAL_ACCESS",
+   "correlation_summary": "Failed logins then a successful out-of-baseline VPN login and a large HR share read. User is on approved leave (LOG-2001-03), which may explain travel.",
+   "evidence_gaps": [
+    "User travel destination",
+    "Owner and classification of fs-hr-02"
+   ]
+  },
+  "ti": {
+   "agent": "threat_intel",
+   "case_id": "{{case_id}}",
+   "confidence": 0.6,
+   "escalation_condition_met": false,
+   "escalation_reason": null,
+   "indicator_assessments": [
+    {
+     "indicator": "198.51.100.77",
+     "type": "ip",
+     "verdict": "CONFLICTING",
+     "record_ids": [
+      "TI-003",
+      "TI-004"
+     ],
+     "rationale": "FeedAlpha SUSPICIOUS (0.45) vs FeedBeta CLEAN (0.60)."
+    }
+   ],
+   "overall_ti_level": "SUSPICIOUS_OR_CONFLICTING",
+   "conflicts": [
+    "198.51.100.77: SUSPICIOUS vs CLEAN"
+   ],
+   "not_found": []
+  },
+  "asset": {
+   "agent": "asset_context",
+   "case_id": "{{case_id}}",
+   "confidence": 0.6,
+   "escalation_condition_met": true,
+   "escalation_reason": "asset fs-hr-02 unknown",
+   "asset_assessments": [
+    {
+     "asset": "fs-hr-02",
+     "record_id": null,
+     "criticality": "UNKNOWN",
+     "data_sensitivity": "UNKNOWN",
+     "owner": null,
+     "business_impact_note": "No CMDB record; share name suggests HR data but criticality is not inferred."
+    }
+   ],
+   "user_assessments": [
+    {
+     "user": "priya.nair",
+     "record_id": "ID-002",
+     "privilege": "STANDARD",
+     "note": "HR executive."
+    }
+   ],
+   "unknown_entities": [
+    "fs-hr-02"
+   ],
+   "overall_asset_criticality": "UNKNOWN"
+  },
+  "risk": {
+   "agent": "risk_prioritisation",
+   "case_id": "{{case_id}}",
+   "confidence": 0.65,
+   "escalation_condition_met": false,
+   "escalation_reason": null,
+   "behaviour_level": "SUSPICIOUS_SINGLE",
+   "proposed_classification": "MEDIUM",
+   "incident_category": "SUSPICIOUS_NEEDS_REVIEW",
+   "recommended_action": "REQUEST_MORE_EVIDENCE",
+   "escalate_recommended": false,
+   "reasons": [
+    {
+     "statement": "Out-of-baseline login followed by 1.8 GB HR share read.",
+     "evidence_ids": [
+      "LOG-2001-01",
+      "LOG-2001-02"
+     ]
+    },
+    {
+     "statement": "Threat intel on the source IP conflicts.",
+     "evidence_ids": [
+      "TI-003",
+      "TI-004"
+     ]
+    },
+    {
+     "statement": "User is on approved leave; travel may explain location.",
+     "evidence_ids": [
+      "LOG-2001-03"
+     ]
+    }
+   ],
+   "missing_evidence": [
+    "Travel destination",
+    "fs-hr-02 ownership and sensitivity"
+   ]
+  },
+  "sum": {
+   "agent": "incident_summary",
+   "case_id": "{{case_id}}",
+   "confidence": 0.65,
+   "escalation_condition_met": false,
+   "escalation_reason": null,
+   "headline": "Out-of-baseline VPN login followed by 1.8 GB HR share read; intel conflicting",
+   "what_happened": "priya.nair logged in via VPN from 198.51.100.77 outside her baseline after 5 failed logins, then read 1.8 GB from fs-hr-02. She is on approved leave.",
+   "key_evidence": [
+    {
+     "text": "Failed logins before success",
+     "evidence_ids": [
+      "HIST-2001",
+      "LOG-2001-01"
+     ]
+    },
+    {
+     "text": "Large HR share read",
+     "evidence_ids": [
+      "LOG-2001-02"
+     ]
+    }
+   ],
+   "risk_rationale": "Score 49 (MEDIUM): conflicting intel and an unknown asset raise uncertainty.",
+   "uncertainties": [
+    "UNKNOWN_ASSET: fs-hr-02 not in CMDB",
+    "TI_CONFLICT on 198.51.100.77",
+    "Travel destination not recorded"
+   ],
+   "recommended_options": [
+    {
+     "action": "REQUEST_MORE_EVIDENCE",
+     "why": "Confirm travel with HR and identify share owner",
+     "requires_approval": false
+    },
+    {
+     "action": "ESCALATE_TIER2",
+     "why": "If travel cannot be confirmed",
+     "requires_approval": false
+    }
+   ],
+   "decision_needed_from_analyst": "Decide whether to request more evidence or escalate to Tier 2."
+  }
+ },
+ "ALRT-3001": {
+  "corr": {
+   "agent": "alert_correlation",
+   "case_id": "{{case_id}}",
+   "confidence": 0.9,
+   "escalation_condition_met": true,
+   "escalation_reason": "multi-stage chain across 4 stages",
+   "entities": {
+    "ips": [
+     "10.30.1.10",
+     "203.0.113.45"
+    ],
+    "hosts": [
+     "fin-db-01",
+     "wks-dba-07"
+    ],
+    "users": [
+     "adm.rkulkarni"
+    ],
+    "hashes": [
+     "9f2c1d7e4b8a3c60d5e1f7a2b9c4d8e3f6a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4"
+    ],
+    "domains": []
+   },
+   "related_alert_ids": [
+    "HIST-3001",
+    "HIST-3002",
+    "HIST-3003"
+   ],
+   "timeline": [
+    {
+     "time": "2026-09-27T13:05:12Z",
+     "event": "Phishing link clicked",
+     "evidence_id": "HIST-3001"
+    },
+    {
+     "time": "2026-09-27T13:22:40Z",
+     "event": "LSASS memory access",
+     "evidence_id": "HIST-3002"
+    },
+    {
+     "time": "2026-09-27T13:58:03Z",
+     "event": "SMB admin-share access to fin-db-01",
+     "evidence_id": "HIST-3003"
+    },
+    {
+     "time": "2026-09-27T14:14:55Z",
+     "event": "Encoded PowerShell via WMI",
+     "evidence_id": "LOG-3001-01"
+    },
+    {
+     "time": "2026-09-27T14:15:40Z",
+     "event": "Outbound TLS to 203.0.113.45",
+     "evidence_id": "LOG-3001-03"
+    }
+   ],
+   "attack_stage_hypothesis": "COMMAND_AND_CONTROL",
+   "correlation_summary": "Phishing, credential access, lateral movement and execution on fin-db-01, ending in outbound C2-like traffic.",
+   "evidence_gaps": [
+    "Decoded PowerShell payload"
+   ]
+  },
+  "ti": {
+   "agent": "threat_intel",
+   "case_id": "{{case_id}}",
+   "confidence": 0.9,
+   "escalation_condition_met": true,
+   "escalation_reason": "MALICIOUS_HIGH indicators",
+   "indicator_assessments": [
+    {
+     "indicator": "203.0.113.45",
+     "type": "ip",
+     "verdict": "MALICIOUS",
+     "record_ids": [
+      "TI-001",
+      "TI-002"
+     ],
+     "rationale": "Two feeds: C2, confidence 0.92 and 0.85."
+    },
+    {
+     "indicator": "9f2c1d7e4b8a3c60d5e1f7a2b9c4d8e3f6a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4",
+     "type": "hash",
+     "verdict": "MALICIOUS",
+     "record_ids": [
+      "TI-005"
+     ],
+     "rationale": "Malware loader, confidence 0.88."
+    }
+   ],
+   "overall_ti_level": "MALICIOUS_HIGH",
+   "conflicts": [],
+   "not_found": []
+  },
+  "asset": {
+   "agent": "asset_context",
+   "case_id": "{{case_id}}",
+   "confidence": 0.9,
+   "escalation_condition_met": true,
+   "escalation_reason": "critical asset and privileged user",
+   "asset_assessments": [
+    {
+     "asset": "fin-db-01",
+     "record_id": "CMDB-002",
+     "criticality": "CRITICAL",
+     "data_sensitivity": "HIGH",
+     "owner": "Finance Systems",
+     "business_impact_note": "Hosts general-ledger database."
+    }
+   ],
+   "user_assessments": [
+    {
+     "user": "adm.rkulkarni",
+     "record_id": "ID-003",
+     "privilege": "PRIVILEGED",
+     "note": "Database administrator, Finance Systems."
+    }
+   ],
+   "unknown_entities": [],
+   "overall_asset_criticality": "CRITICAL"
+  },
+  "risk": {
+   "agent": "risk_prioritisation",
+   "case_id": "{{case_id}}",
+   "confidence": 0.88,
+   "escalation_condition_met": false,
+   "escalation_reason": null,
+   "behaviour_level": "MULTI_STAGE",
+   "proposed_classification": "CRITICAL",
+   "incident_category": "CONFIRMED_INCIDENT_LIKELY",
+   "recommended_action": "ISOLATE_HOST_SIMULATED",
+   "escalate_recommended": true,
+   "reasons": [
+    {
+     "statement": "Linked chain from phishing to credential access, lateral movement and execution.",
+     "evidence_ids": [
+      "HIST-3001",
+      "HIST-3002",
+      "HIST-3003",
+      "LOG-3001-01"
+     ]
+    },
+    {
+     "statement": "Outbound connection to a high-confidence C2 IP and a known malware-loader hash.",
+     "evidence_ids": [
+      "LOG-3001-03",
+      "TI-001",
+      "TI-005"
+     ]
+    },
+    {
+     "statement": "Critical finance database under a privileged account.",
+     "evidence_ids": [
+      "CMDB-002",
+      "ID-003"
+     ]
+    }
+   ],
+   "missing_evidence": [
+    "Decoded PowerShell payload"
+   ]
+  },
+  "sum": {
+   "agent": "incident_summary",
+   "case_id": "{{case_id}}",
+   "confidence": 0.88,
+   "escalation_condition_met": true,
+   "escalation_reason": "route ESCALATE",
+   "headline": "Likely active compromise of fin-db-01: multi-stage chain ending in C2 traffic",
+   "what_happened": "After a phishing click and LSASS access on wks-dba-07, adm.rkulkarni reached fin-db-01 over SMB; encoded PowerShell ran and the host connected to known C2 IP 203.0.113.45.",
+   "key_evidence": [
+    {
+     "text": "C2 IP confirmed by two feeds",
+     "evidence_ids": [
+      "TI-001",
+      "TI-002"
+     ]
+    },
+    {
+     "text": "Malware loader dropped",
+     "evidence_ids": [
+      "LOG-3001-02",
+      "TI-005"
+     ]
+    }
+   ],
+   "risk_rationale": "Score 97 (CRITICAL); R1 and R2 overrides also apply.",
+   "uncertainties": [
+    "PowerShell payload not decoded"
+   ],
+   "recommended_options": [
+    {
+     "action": "ISOLATE_HOST_SIMULATED",
+     "why": "Stop C2 on a critical asset",
+     "requires_approval": true
+    },
+    {
+     "action": "ESCALATE_IR_LEAD",
+     "why": "Confirmed incident likely",
+     "requires_approval": false
+    }
+   ],
+   "decision_needed_from_analyst": "SOC Lead to approve or modify simulated isolation of fin-db-01."
+  }
+ }
+}

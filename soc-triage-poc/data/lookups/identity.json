@@ -1,0 +1,20 @@
+[
+  {
+    "record_id": "ID-001",
+    "user": "svc_vulnscan",
+    "privilege": "SERVICE_ACCOUNT",
+    "role": "Vulnerability scanning service"
+  },
+  {
+    "record_id": "ID-002",
+    "user": "priya.nair",
+    "privilege": "STANDARD",
+    "role": "HR executive"
+  },
+  {
+    "record_id": "ID-003",
+    "user": "adm.rkulkarni",
+    "privilege": "PRIVILEGED",
+    "role": "Database administrator, Finance Systems"
+  }
+]

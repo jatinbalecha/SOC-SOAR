@@ -1,0 +1,4 @@
+model,runs,classification_exact,classification_within_one,model_proposal_exact,category_match,action_match,route_match,escalation_accuracy,false_positives,false_negatives,hallucinated_ids,json_first_attempt_rate,retries,rate_limited_calls,median_case_llm_latency_s,task_completion,unexpected_exceptions,explanation_quality_1to5
+openai/gpt-oss-120b,15,1.0,1.0,0.333,0.444,0.556,0.867,0.867,2,0,2,0.976,2,1,8.6,0.867,2,
+openai/gpt-oss-20b,15,1.0,1.0,0.778,0.889,0.778,0.6,0.733,4,0,6,0.9,5,1,6.0,0.6,6,
+qwen/qwen3.8-27b,15,0.571,0.571,0.571,0.571,0.571,0.692,0.769,3,0,0,0.95,10,9,6.1,0.6,4,

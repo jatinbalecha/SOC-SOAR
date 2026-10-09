@@ -1,0 +1,26 @@
+{
+  "alert_id": "ALRT-1001",
+  "timestamp": "2026-09-27T02:10:14Z",
+  "source": "Network IDS (simulated)",
+  "alert_type": "Internal Port Scan",
+  "severity": "Medium",
+  "source_ip": "10.20.5.15",
+  "destination_ip": "10.20.8.0/24",
+  "user": "svc_vulnscan",
+  "asset": "vscan-01",
+  "event_description": "Sequential connection attempts to 254 internal hosts on ports 22, 80, 443 and 445 within 6 minutes.",
+  "log_evidence": [
+    {
+      "evidence_id": "LOG-1001-01",
+      "time": "2026-09-27T02:04:00Z",
+      "text": "IDS: 1,016 SYN packets from 10.20.5.15 to 10.20.8.0/24 in 360 seconds; no payload exchange."
+    },
+    {
+      "evidence_id": "LOG-1001-02",
+      "time": "2026-09-27T02:10:14Z",
+      "text": "Change calendar (simulated) CHG-2207: weekly authorised vulnerability scan by vscan-01, Sundays 02:00-03:00 UTC."
+    }
+  ],
+  "threat_intelligence": "No external match reported by source tool",
+  "asset_criticality": "Low"
+}

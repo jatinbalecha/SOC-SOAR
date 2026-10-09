@@ -1,0 +1,53 @@
+{
+  "ALRT-1001": {
+    "expected_class": "LOW",
+    "expected_category": "BENIGN_TRUE_POSITIVE",
+    "expected_route": "CONFIRM_CLOSURE",
+    "expected_actions": [
+      "CLOSE_AS_BENIGN"
+    ],
+    "expected_escalate": false,
+    "expected_status": "PENDING_CLOSURE_CONFIRMATION"
+  },
+  "ALRT-2001": {
+    "expected_class": "MEDIUM",
+    "expected_category": "SUSPICIOUS_NEEDS_REVIEW",
+    "expected_route": "REVIEW",
+    "expected_actions": [
+      "REQUEST_MORE_EVIDENCE",
+      "NOTIFY_ASSET_OWNER"
+    ],
+    "expected_escalate": false,
+    "expected_status": "PENDING_ANALYST_REVIEW"
+  },
+  "ALRT-3001": {
+    "expected_class": "CRITICAL",
+    "expected_category": "CONFIRMED_INCIDENT_LIKELY",
+    "expected_route": "ESCALATE",
+    "expected_actions": [
+      "ISOLATE_HOST_SIMULATED",
+      "ESCALATE_IR_LEAD"
+    ],
+    "expected_escalate": true,
+    "expected_status": "ESCALATED_PENDING_APPROVAL"
+  },
+  "ALRT-4001": {
+    "expected_class": null,
+    "expected_category": null,
+    "expected_route": "EXCEPTION",
+    "expected_actions": [],
+    "expected_escalate": true,
+    "expected_status": "EXCEPTION_MANUAL_QUEUE",
+    "expected_exception_stage": "injection_screen"
+  },
+  "ALRT-5001": {
+    "expected_class": null,
+    "expected_category": null,
+    "expected_route": "EXCEPTION",
+    "expected_actions": [],
+    "expected_escalate": true,
+    "expected_status": "EXCEPTION_MANUAL_QUEUE",
+    "expected_exception_stage": "input_validation"
+  },
+  "_note": "Ground truth is the team's design judgement [P]; to be sanity-checked by the industry expert [E]. Never shown to models."
+}

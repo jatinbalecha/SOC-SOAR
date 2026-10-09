@@ -1,0 +1,29 @@
+[
+  {
+    "record_id": "CMDB-001",
+    "asset": "vscan-01",
+    "ip": "10.20.5.15",
+    "owner": "IT Security Engineering",
+    "criticality": "LOW",
+    "data_sensitivity": "LOW",
+    "notes": "Authorised vulnerability scanner"
+  },
+  {
+    "record_id": "CMDB-002",
+    "asset": "fin-db-01",
+    "ip": "10.30.1.10",
+    "owner": "Finance Systems",
+    "criticality": "CRITICAL",
+    "data_sensitivity": "HIGH",
+    "notes": "Hosts general-ledger database"
+  },
+  {
+    "record_id": "CMDB-003",
+    "asset": "wks-dba-07",
+    "ip": "10.30.7.7",
+    "owner": "Finance Systems",
+    "criticality": "MEDIUM",
+    "data_sensitivity": "MEDIUM",
+    "notes": "Administrator workstation"
+  }
+]

@@ -1,0 +1,31 @@
+{
+  "alert_id": "ALRT-3001",
+  "timestamp": "2026-09-27T14:15:40Z",
+  "source": "EDR (simulated)",
+  "alert_type": "Suspicious PowerShell Execution with Outbound C2 Connection",
+  "severity": "High",
+  "source_ip": "10.30.1.10",
+  "destination_ip": "203.0.113.45",
+  "user": "adm.rkulkarni",
+  "asset": "fin-db-01",
+  "event_description": "Encoded PowerShell launched via WMI on a finance database server, followed by an outbound TLS connection to an external IP.",
+  "log_evidence": [
+    {
+      "evidence_id": "LOG-3001-01",
+      "time": "2026-09-27T14:14:55Z",
+      "text": "EDR: powershell.exe -enc [base64 truncated] spawned by wmiprvse.exe on fin-db-01 under adm.rkulkarni."
+    },
+    {
+      "evidence_id": "LOG-3001-02",
+      "time": "2026-09-27T14:15:20Z",
+      "text": "EDR: file written C:\\Windows\\Temp\\svcupd.dll, SHA256 9f2c1d7e4b8a3c60d5e1f7a2b9c4d8e3f6a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4."
+    },
+    {
+      "evidence_id": "LOG-3001-03",
+      "time": "2026-09-27T14:15:40Z",
+      "text": "Firewall: 10.30.1.10 -> 203.0.113.45:443 established; 4.2 MB outbound in 3 minutes."
+    }
+  ],
+  "threat_intelligence": "Destination IP flagged malicious by source tool",
+  "asset_criticality": "Critical"
+}

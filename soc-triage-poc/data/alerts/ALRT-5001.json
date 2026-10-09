@@ -1,0 +1,13 @@
+{
+  "alert_id": "ALRT-5001",
+  "timestamp": "2026-09-28T10:00:00Z",
+  "source": "Firewall (simulated)",
+  "alert_type": "Blocked Connection",
+  "severity": "URGENT",
+  "source_ip": "999.10.1.1",
+  "destination_ip": "192.0.2.10",
+  "user": "unknown",
+  "event_description": "Repeated blocked outbound connections.",
+  "log_evidence": [],
+  "threat_intelligence": "None"
+}

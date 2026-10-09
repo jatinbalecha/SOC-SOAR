@@ -1,0 +1,306 @@
+{
+  "id": "socWf0Setup00001",
+  "name": "SOC WF-0 Setup (run once)",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Run once: create tables",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "18e3a0b2-7ed9-4843-88e9-aa7895f5bed7"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "soc-setup",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "name": "Or: POST /soc-setup (publish only while setting up)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        180
+      ],
+      "id": "8fba2674-9f95-4711-83a1-634e2ae66e73",
+      "webhookId": "6c82c68d-ae7a-4622-8183-ddf11dd5732f"
+    },
+    {
+      "parameters": {
+        "resource": "table",
+        "operation": "create",
+        "tableName": "soc_cases",
+        "columns": {
+          "column": [
+            {
+              "name": "case_id",
+              "type": "string"
+            },
+            {
+              "name": "created_at",
+              "type": "string"
+            },
+            {
+              "name": "updated_at",
+              "type": "string"
+            },
+            {
+              "name": "alert_id",
+              "type": "string"
+            },
+            {
+              "name": "status",
+              "type": "string"
+            },
+            {
+              "name": "route",
+              "type": "string"
+            },
+            {
+              "name": "priority",
+              "type": "string"
+            },
+            {
+              "name": "risk_score",
+              "type": "number"
+            },
+            {
+              "name": "classification",
+              "type": "string"
+            },
+            {
+              "name": "confidence",
+              "type": "number"
+            },
+            {
+              "name": "flags",
+              "type": "string"
+            },
+            {
+              "name": "model",
+              "type": "string"
+            },
+            {
+              "name": "asset_criticality",
+              "type": "string"
+            },
+            {
+              "name": "recommended_action",
+              "type": "string"
+            },
+            {
+              "name": "execution_id",
+              "type": "string"
+            },
+            {
+              "name": "exception_stage",
+              "type": "string"
+            },
+            {
+              "name": "exception_reason",
+              "type": "string"
+            },
+            {
+              "name": "prompt_versions",
+              "type": "string"
+            },
+            {
+              "name": "total_latency_ms",
+              "type": "number"
+            },
+            {
+              "name": "retries",
+              "type": "number"
+            },
+            {
+              "name": "hallucinated_ids",
+              "type": "number"
+            },
+            {
+              "name": "alert_json",
+              "type": "string"
+            },
+            {
+              "name": "lookups_json",
+              "type": "string"
+            },
+            {
+              "name": "correlation_json",
+              "type": "string"
+            },
+            {
+              "name": "ti_json",
+              "type": "string"
+            },
+            {
+              "name": "asset_json",
+              "type": "string"
+            },
+            {
+              "name": "risk_json",
+              "type": "string"
+            },
+            {
+              "name": "scoring_json",
+              "type": "string"
+            },
+            {
+              "name": "summary_json",
+              "type": "string"
+            },
+            {
+              "name": "decision_json",
+              "type": "string"
+            },
+            {
+              "name": "agent_stats_json",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {
+          "createIfNotExists": true
+        }
+      },
+      "name": "Create soc_cases",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        0
+      ],
+      "id": "867e1aff-b05b-4d5b-8b4e-3b6304725b0a"
+    },
+    {
+      "parameters": {
+        "resource": "table",
+        "operation": "create",
+        "tableName": "soc_audit",
+        "columns": {
+          "column": [
+            {
+              "name": "ts",
+              "type": "string"
+            },
+            {
+              "name": "case_id",
+              "type": "string"
+            },
+            {
+              "name": "step",
+              "type": "string"
+            },
+            {
+              "name": "actor",
+              "type": "string"
+            },
+            {
+              "name": "model",
+              "type": "string"
+            },
+            {
+              "name": "prompt_version",
+              "type": "string"
+            },
+            {
+              "name": "event",
+              "type": "string"
+            },
+            {
+              "name": "detail",
+              "type": "string"
+            },
+            {
+              "name": "latency_ms",
+              "type": "number"
+            },
+            {
+              "name": "status",
+              "type": "string"
+            },
+            {
+              "name": "execution_id",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {
+          "createIfNotExists": true
+        }
+      },
+      "name": "Create soc_audit",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        0
+      ],
+      "id": "ab22cf78-50f6-4236-b7f0-5e491879c2c2"
+    },
+    {
+      "parameters": {
+        "content": "## WF-0 Setup\nRun once after import. Creates the two n8n Data Tables used as the case store and the append-only audit log. Safe to re-run (reuses existing tables). Alternative for scripted setup: publish this workflow, POST /webhook/soc-setup once, then unpublish it.",
+        "height": 180,
+        "width": 420,
+        "color": 7
+      },
+      "name": "Note d201b9",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -220
+      ],
+      "id": "2cf6dc33-7105-471d-bc87-b39acc3c40e0"
+    }
+  ],
+  "connections": {
+    "Run once: create tables": {
+      "main": [
+        [
+          {
+            "node": "Create soc_cases",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Or: POST /soc-setup (publish only while setting up)": {
+      "main": [
+        [
+          {
+            "node": "Create soc_cases",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create soc_cases": {
+      "main": [
+        [
+          {
+            "node": "Create soc_audit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

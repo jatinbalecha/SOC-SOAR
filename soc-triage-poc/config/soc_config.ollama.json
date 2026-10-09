@@ -1,0 +1,222 @@
+{
+  "config_version": "cfg_v1.0",
+  "_note": "Weights, thresholds and role rules are the team's proposal [P] until validated by the industry expert [E]. Editing this file and re-running tools/build_workflows.js regenerates the n8n workflows.",
+  "llm": {
+    "provider": "ollama",
+    "ollama_base_url": "http://host.docker.internal:11434",
+    "openai_compat_base_url": "https://YOUR-OPEN-MODEL-HOST/v1",
+    "timeout_ms": 180000,
+    "temperature": 0,
+    "seed": 42,
+    "num_ctx": 8192,
+    "mock_base_url": "http://localhost:11500",
+    "api_key_env": "SOC_LLM_API_KEY",
+    "min_delay_ms": 0,
+    "rate_limit_wait_ms": 30000,
+    "max_output_tokens": 0
+  },
+  "models": [
+    {
+      "id": "qwen2.5:7b",
+      "label": "Qwen 2.5 7B",
+      "family": "Qwen"
+    },
+    {
+      "id": "llama3.1:8b",
+      "label": "Llama 3.1 8B",
+      "family": "Llama"
+    },
+    {
+      "id": "mistral:7b",
+      "label": "Mistral 7B",
+      "family": "Mistral"
+    },
+    {
+      "id": "gemma3:4b",
+      "label": "Gemma 3 4B (optional 4th)",
+      "family": "Gemma"
+    },
+    {
+      "id": "mock-model",
+      "label": "Mock: correct answers (pipeline test only)",
+      "family": "Mock"
+    },
+    {
+      "id": "mock-flaky",
+      "label": "Mock: broken first reply (retry test)",
+      "family": "Mock"
+    },
+    {
+      "id": "mock-halluc",
+      "label": "Mock: invented evidence ID (guardrail test)",
+      "family": "Mock"
+    }
+  ],
+  "prompt_versions": {
+    "shared": "shared_v1.0",
+    "corr": "corr_v1.0",
+    "ti": "ti_v1.0",
+    "asset": "asset_v1.0",
+    "risk": "risk_v1.0",
+    "sum": "sum_v1.0"
+  },
+  "allowed_actions": [
+    "CLOSE_AS_FALSE_POSITIVE",
+    "CLOSE_AS_BENIGN",
+    "MONITOR",
+    "REQUEST_MORE_EVIDENCE",
+    "NOTIFY_ASSET_OWNER",
+    "RESET_CREDENTIALS_SIMULATED",
+    "BLOCK_IOC_SIMULATED",
+    "ISOLATE_HOST_SIMULATED",
+    "ESCALATE_TIER2",
+    "ESCALATE_IR_LEAD"
+  ],
+  "containment_actions": [
+    "RESET_CREDENTIALS_SIMULATED",
+    "BLOCK_IOC_SIMULATED",
+    "ISOLATE_HOST_SIMULATED"
+  ],
+  "closure_actions": [
+    "CLOSE_AS_FALSE_POSITIVE",
+    "CLOSE_AS_BENIGN"
+  ],
+  "weights": {
+    "F1_ti": {
+      "max": 25,
+      "levels": {
+        "MALICIOUS_HIGH": 25,
+        "MALICIOUS_MEDIUM": 18,
+        "SUSPICIOUS_OR_CONFLICTING": 12,
+        "UNKNOWN": 8,
+        "CLEAN": 0
+      }
+    },
+    "F2_asset": {
+      "max": 20,
+      "levels": {
+        "CRITICAL": 20,
+        "HIGH": 14,
+        "MEDIUM": 7,
+        "LOW": 2,
+        "UNKNOWN": 12
+      }
+    },
+    "F3_severity": {
+      "max": 10,
+      "levels": {
+        "Critical": 10,
+        "High": 7,
+        "Medium": 4,
+        "Low": 1,
+        "Info": 0
+      }
+    },
+    "F4_behaviour": {
+      "max": 20,
+      "levels": {
+        "MULTI_STAGE": 20,
+        "SUSPICIOUS_SINGLE": 10,
+        "WEAK_ANOMALY": 4,
+        "BENIGN_EXPLAINED": 0
+      }
+    },
+    "F5_privilege": {
+      "max": 10,
+      "levels": {
+        "PRIVILEGED": 10,
+        "SERVICE_ACCOUNT": 6,
+        "UNKNOWN": 6,
+        "STANDARD": 3
+      }
+    },
+    "F6_related": {
+      "max": 10,
+      "levels": {
+        "3+": 10,
+        "1-2": 5,
+        "0": 0
+      }
+    },
+    "F7_sensitivity": {
+      "max": 5,
+      "levels": {
+        "HIGH": 5,
+        "MEDIUM": 3,
+        "UNKNOWN": 3,
+        "LOW": 0
+      }
+    }
+  },
+  "thresholds": {
+    "LOW": 0,
+    "MEDIUM": 30,
+    "HIGH": 60,
+    "CRITICAL": 80
+  },
+  "closure_min_confidence": 0.8,
+  "low_agent_confidence": 0.6,
+  "confidence_penalty_per_flag": 0.1,
+  "ti_malicious_override_confidence": 0.7,
+  "related_window_hours": 24,
+  "roles": {
+    "Tier1": {
+      "max_class": "MEDIUM",
+      "may_approve_containment": false,
+      "may_isolate_critical": false
+    },
+    "Tier2": {
+      "max_class": "HIGH",
+      "may_approve_containment": true,
+      "may_isolate_critical": false
+    },
+    "Lead": {
+      "max_class": "CRITICAL",
+      "may_approve_containment": true,
+      "may_isolate_critical": true
+    }
+  },
+  "demo_users": {
+    "t1.analyst01": "Tier1",
+    "t2.analyst02": "Tier2",
+    "lead.soc": "Lead"
+  },
+  "validation": {
+    "required_fields": [
+      "alert_id",
+      "timestamp",
+      "source",
+      "alert_type",
+      "severity",
+      "source_ip",
+      "destination_ip",
+      "user",
+      "asset",
+      "event_description",
+      "log_evidence"
+    ],
+    "severities": [
+      "Info",
+      "Low",
+      "Medium",
+      "High",
+      "Critical"
+    ],
+    "max_description_chars": 1500,
+    "max_log_lines": 50,
+    "max_log_text_chars": 1000
+  },
+  "injection_patterns": [
+    "ignore\\s+(all\\s+)?(the\\s+)?(previous|prior|above|earlier)\\s+(instructions|prompts|rules)",
+    "disregard\\s+(all\\s+)?(previous|prior|above|your)\\s+(instructions|rules|guidelines)",
+    "classify\\s+(this\\s+)?(alert\\s+|case\\s+|incident\\s+)?as\\s+(low|benign|clean|false\\s*positive)",
+    "do\\s+not\\s+(escalate|flag|alert|report)",
+    "(close|dismiss|resolve)\\s+(it|this|the\\s+alert|the\\s+case)\\s+(without|with\\s+no)\\s+review",
+    "you\\s+are\\s+now\\s+",
+    "system\\s+prompt",
+    "note\\s+to\\s+(the\\s+)?(ai|assistant|model|llm)",
+    "new\\s+instructions\\s*:",
+    "</?\\s*evidence\\s*>"
+  ],
+  "sla_minutes_escalated": 10
+}
